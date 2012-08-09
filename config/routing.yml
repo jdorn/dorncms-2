@@ -1,0 +1,5 @@
+home:
+    pattern:  /
+    defaults: { _controller: DornCMS:PageController:View:home }
+    requirements:
+        _method: GET
