@@ -1,16 +1,30 @@
 <?php
-class DornCMS {
+
+namespace DornCMS;
+
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class Kernel {
 	public $config;
 	public $request;
 	
 	public function __construct() {
 		require_once __DIR__."/../Symfony/Component/ClassLoader/UniversalClassLoader.php";
 		
-		$loader = new Symfony\Component\ClassLoader\UniversalClassLoader();
+		$loader = new UniversalClassLoader();
 		$loader->register();
 		
-		//Register all Symfony Components
+		//Library autoloaders
 		$loader->registerNamespace('Symfony', __DIR__.'/..');
+		$loader->registerNamespace('DornCMS',__DIR__.'/..');
+		$loader->registerPrefix('Twig_',__DIR__.'/../Twig/lib');
 		
 		//SessionHandlerInterface
 		if (!interface_exists('SessionHandlerInterface')) {
@@ -23,39 +37,56 @@ class DornCMS {
 	
 	public function run() {
 		//determine the controller to use for the route
-		$controller = $this->route();
+		$route = $this->route();
 		
-		//prepare a response
-		$response = $this->getResponse("This is a test");
+		$controller_parts = explode(':',$route['_controller']);
+		
+		$action = array_pop($controller_parts);
+		
+		$class = implode('\\',$controller_parts);
+		
+		if(class_exists($class)) {
+			$controller = new $class();
+			
+			if(method_exists($controller,$action)) {
+				$response = $controller->{$action}($route);
+			}
+			else {
+				throw new Exception("Unknown method $action of class $controller");
+			}
+		}
+		else {
+			throw new Exception("Unknown class $controller");
+		}
 		
 		$response->send();
 	}
 	
 	protected function getConfig() {
 		//get the main config settings
-		$config = Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../../config/config.yml');
+		$config = Yaml::parse(__DIR__.'/../../config/config.yml');
 		
 		//load the routing settings
-		$config['routing'] = Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../../config/routing.yml');
+		$config['routing'] = Yaml::parse(__DIR__.'/../../config/routing.yml');
 		if(!$config['routing']) $config['routes'] = array();
 		
 		//load the security settings
-		$config['security'] = Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../../config/security.yml');
+		$config['security'] = Yaml::parse(__DIR__.'/../../config/security.yml');
 		if(!$config['security']) $config['security'] = array();
 		
 		//load app parameters
-		$config['parameters'] = Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../../config/parameters.yml');
+		$config['parameters'] = Yaml::parse(__DIR__.'/../../config/parameters.yml');
 		if(!$config['parameters']) $config['parameters'] = array();
 		
 		//load admin routing rules
-		$admin_routes = Symfony\Component\Yaml\Yaml::parse(__DIR__.'/../../config/admin_routing.yml');
+		$admin_routes = Yaml::parse(__DIR__.'/../../config/admin_routing.yml');
 		if(!$admin_routes) $admin_routes = array();
 		$config['routing'] = array_merge($config['routing'],$admin_routes);
 		
 		return $config;
 	}
 	public function route() {
-		$routes = new Symfony\Component\Routing\RouteCollection();
+		$routes = new RouteCollection();
 		
 		//add routes from config
 		foreach($this->config['routing'] as $name=>$route) {
@@ -63,13 +94,13 @@ class DornCMS {
 			if(!isset($route['requirements'])) $route['requirements'] = array();
 			if(!isset($route['options'])) $route['options'] = array();
 			
-			$routes->add($name, new Symfony\Component\Routing\Route($route['pattern'], $route['defaults'],$route['requirements'],$route['options']));
+			$routes->add($name, new Route($route['pattern'], $route['defaults'],$route['requirements'],$route['options']));
 		}
 		
-		$context = new Symfony\Component\Routing\RequestContext();
+		$context = new RequestContext();
 		$context->fromRequest($this->request);
 
-		$matcher = new Symfony\Component\Routing\Matcher\UrlMatcher($routes, $context);
+		$matcher = new UrlMatcher($routes, $context);
 
 		$path = array_shift(explode('?',$this->request->getRequestUri()));
 
@@ -78,9 +109,9 @@ class DornCMS {
 		return $parameters;
 	}
 	protected function getRequest() {
-		return Symfony\Component\HttpFoundation\Request::createFromGlobals();
+		return Request::createFromGlobals();
 	}
 	public function getResponse($response='',$code=200, $headers = array()) {
-		return new Symfony\Component\HttpFoundation\Response($response,$code,$headers);
+		return new Response($response,$code,$headers);
 	}
 }

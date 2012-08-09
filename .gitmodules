@@ -10,3 +10,6 @@
 [submodule "lib/Symfony/Component/Routing"]
 	path = lib/Symfony/Component/Routing
 	url = https://github.com/symfony/Routing.git
+[submodule "lib/Twig"]
+	path = lib/Twig
+	url = https://github.com/fabpot/Twig.git
