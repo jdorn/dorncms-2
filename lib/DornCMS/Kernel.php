@@ -52,11 +52,11 @@ class Kernel {
 				$response = $controller->{$action}($route);
 			}
 			else {
-				throw new Exception("Unknown method $action of class $controller");
+				throw new \Exception("Unknown method $action of class $controller");
 			}
 		}
 		else {
-			throw new Exception("Unknown class $controller");
+			throw new \Exception("Unknown class $controller");
 		}
 		
 		$response->send();
