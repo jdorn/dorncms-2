@@ -6,42 +6,10 @@ namespace DornCMS\Twig;
  * 
  * @author  Jeremy Dorn <jeremy@jeremydorn.com>
  */
-class BlockSection implements SectionInterface
-{
-	protected $source;
-	protected $body;
-	protected $name;
-	
-	public function __construct($name, $source, $body) {
-		$this->source = $source;
-		$this->name = trim($name);
-		$this->body = $body;
-	}
-	
-	public function getSource() {
-		return $this->source;
-	}
-	
-	public function getName() {
-		return $this->name;
-	}
-	
-	public function setName($name) {
-		$this->name = trim($name);
-		$this->source = $this->generateSource();
-	}
-	
-	public function getBody() {
-		return $this->body;
-	}
-	
-	public function setBody($body) {
-		$this->body = $body;
-		$this->source = $this->generateSource();
-	}
-	
+class BlockSection extends Section
+{		
 	public function getTitle() {
-		return 'Block "'.$this->getName().'"';
+		return ucwords(trim($this->getName(),'"')).' Block';
 	}
 	
 	public function canRename() {
@@ -49,10 +17,6 @@ class BlockSection implements SectionInterface
 	}
 	
 	protected function generateSource() {
-		return '{% block '.$this->name.' %}'."\n".$this->body."\n".'{% endblock '.$this->name.' %}';
-	}
-	
-	public function getEditorType() {
-		return self::TYPE_WYSIWYG;
+		return '{% block '.$this->getName().' %}'."\n".$this->getBody()."\n".'{% endblock '.$this->getName().' %}';
 	}
 }

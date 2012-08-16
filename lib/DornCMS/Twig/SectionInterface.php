@@ -7,24 +7,15 @@ namespace DornCMS\Twig;
  * @author  Jeremy Dorn <jeremy@jeremydorn.com>
  */
 interface SectionInterface
-{
-	const TYPE_TEXT_INPUT = 'text';
-	const TYPE_TEXTAREA = 'textarea';
-	const TYPE_WYSIWYG = 'wysiwyg';
-	
+{	
 	public function getSource();
-	
-	public function getName();
-	
-	public function setName($name);
-	
 	public function getBody();
-	
-	public function setBody($body);
-	
+	public function getName();
 	public function getTitle();
 	
-	public function canRename();
+	public function setBody($body);
+	public function setName($name);
 	
-	public function getEditorType();
+	public function canRename();
+	public function getEditor();
 }

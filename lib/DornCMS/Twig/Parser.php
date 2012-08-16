@@ -32,13 +32,13 @@ class Parser implements \Twig_ParserInterface
 				$token = $stream->next();
 			}
 			catch(\Exception $e) {
-				if($source) $return[] = $source;
+				if(trim($source)) $return[] = new Section($source,$source,md5($source));
 				break;
 			}
 			
 			//if this is the start of a twig code block (i.e. "{%")
 			if($token->getType() === \Twig_Token::BLOCK_START_TYPE) {
-				if($source) $return[] = $source;
+				if(trim($source)) $return[] = new Section($source,$source,md5($source));
 				$source = $this->getTokenValue($token);
 				
 				//get the type of code block
@@ -53,7 +53,7 @@ class Parser implements \Twig_ParserInterface
 					$body = null;
 					$source .= $this->parseUntilTag('endblock',$name,$body);
 					
-					$return[] = new BlockSection($name, $source, $body);
+					$return[] = new BlockSection($source, $body, $name);
 					$source = '';
 				}
 				elseif(trim($next->getValue()) === 'extends') {

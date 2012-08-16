@@ -5,13 +5,13 @@ use Symfony\Component\HttpFoundation\Response;
 use DornCMS\Twig\Parser;
 
 class PageController {
-	public function view($route) {
+	public function view($template, $route) {
 		$loader = new \Twig_Loader_Filesystem(__DIR__.'/../../templates');
 		$twig = new \Twig_Environment($loader, array(
 			//'cache' => '/tmp/twig_cache',
 		));
 
-		$response = new Response($twig->render($route['template'].'.twig', $route),200);
+		$response = new Response($twig->render($template.'.twig', $route),200);
 		
 		return $response;
 	}
@@ -22,37 +22,27 @@ class PageController {
 			//'cache' => '/tmp/twig_cache',
 		));
 		
-		$template = $loader->getSource($route['template'].'.twig');
+		$contents = file_get_contents(__DIR__.'/../../templates/'.$route['template'].'.twig');
 		
-		$stream = $twig->tokenize($template);
-		
-		$twig->setParser(new Parser());
-		
-		$return = $twig->parse($stream);
-		
-		$response = '';
-		
-		foreach($return as $section) {
-			if($section instanceof Twig\SectionInterface) {
-				$response .= "<h2>".$section->getTitle().
-					($section->canRename()? "<a href='#' style='font-size: .6em; margin-left: 20px; font-weight:normal;'>change name</a>" : "").
-					"</h2>";
-				
-				if($section->getEditorType() === Twig\SectionInterface::TYPE_TEXT_INPUT) {
-					$response .= "<input type='text' style='width: 80%;' value='".htmlentities($section->getBody())."' />";
-				}
-				elseif($section->getEditorType() === Twig\SectionInterface::TYPE_TEXTAREA) {
-					$response .= "<textarea style='width: 80%; height: 200px;'>".htmlentities($section->getBody())."</textarea>";
-				}
-				elseif($section->getEditorType() === Twig\SectionInterface::TYPE_WYSIWYG) {
-					$response .= "<textarea style='width: 80%; height: 200px;'>".htmlentities($section->getBody())."</textarea>";
-				}
-			}
-			else {
-				$response .= "<pre>".print_r($section,true)."</pre>";
-			}
+		//if this contains blocks, use the Ace editor, otherwise, use WYSIWYG.
+		if(preg_match('/\{\%\s*block/',$contents)) {
+			$editor = new Twig\AceEditor(preg_replace('/[^a-zA-Z0-9\-_]/','',$route['template']),$contents);
+		}
+		else {
+			$editor = new Twig\CleEditor(preg_replace('/[^a-zA-Z0-9\-_]/','',$route['template']),$contents);
 		}
 		
-		return new Response($response);
+		$response = new Response($twig->render('admin/edit_template.html.twig',array(
+			'template'=>array(
+				'editor'=>$editor,
+				'name'=>$route['template'],
+			),
+				
+			'javascripts'=>$editor->getJs(),
+			'stylesheets'=>$editor->getCss()
+		)));
+		
+		
+		return $response;
 	}
 }

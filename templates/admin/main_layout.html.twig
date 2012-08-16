@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% block javascripts %}
+			{% for file in javascripts %}
+			<script src="/js/{{ file }}"></script>
+			{% endfor %}
+		{% endblock %}
+		{% block stylesheets %}
+			{% for file in stylesheets %}
+			<link href="/css/{{ file }}" rel='stylesheet' language="text/css"/>
+			{% endfor %}
+		{% endblock %}
+	</head>
+	<body>
+		{% block startofbody %}{% endblock %}
+		
+		<header style='background: #ccc; padding: 10px 10px 20px;'>
+		{% block header %}
+			<h1>DornCMS 2</h1>
+		{% endblock %}
+		</header>
+		
+		<div id='content'>
+		{% block content %}
+		
+		{% endblock %}
+		</div>
+		
+		<footer>
+		{% block footer %}
+		
+		{% endblock %}
+		</footer>
+		
+		{% block endofbody %}{% endblock %}
+	</body>
+</html>

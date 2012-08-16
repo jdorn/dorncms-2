@@ -49,10 +49,34 @@ class Kernel {
 			$controller = new $class();
 			
 			if(method_exists($controller,$action)) {
-				$response = $controller->{$action}($route);
+				//determine the parameters that should be passed into the method
+				$reflectionMethod = new \ReflectionMethod($controller,$action);
+				$parameters = $reflectionMethod->getParameters();
+				$call_array = array();
+				foreach($parameters as $parameter) {
+					$name = $parameter->getName();
+					
+					if($name === 'route') {
+						$call_array[] = $route;
+					}
+					elseif($name === 'request') {
+						$call_array[] = $this->request;
+					}
+					elseif(isset($route[$name])) {
+						$call_array[] = $route[$name];
+					}
+					elseif($parameter->isDefaultValueAvailable()) {
+						$call_array[] = $parameter->getDefaultValue();
+					}
+					else {
+						throw new \Exception("Unknown parameter '$name' in '$class::$action'");
+					}
+				}
+				
+				$response = call_user_func_array(array($controller,$action),$call_array);
 			}
 			else {
-				throw new \Exception("Unknown method $action of class $controller");
+				throw new \Exception("Unknown method '$action' of class '$class'");
 			}
 		}
 		else {
@@ -63,6 +87,8 @@ class Kernel {
 	}
 	
 	protected function getConfig() {
+		if($this->config) return $this->config;
+		
 		//get the main config settings
 		$config = Yaml::parse(__DIR__.'/../../config/config.yml');
 		
@@ -109,9 +135,8 @@ class Kernel {
 		return $parameters;
 	}
 	protected function getRequest() {
+		if($this->request) return $this->request;
+		
 		return Request::createFromGlobals();
-	}
-	public function getResponse($response='',$code=200, $headers = array()) {
-		return new Response($response,$code,$headers);
 	}
 }

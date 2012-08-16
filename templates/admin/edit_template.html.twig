@@ -1,0 +1,8 @@
+{% extends "admin/main_layout.html.twig" %}
+
+{% block content %}
+	<h1>Edit Template {{ template.name }}</h1>
+	
+	{{ template.editor.editorHtml|raw }}
+	
+{% endblock %}

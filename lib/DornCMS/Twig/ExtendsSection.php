@@ -6,50 +6,22 @@ namespace DornCMS\Twig;
  * 
  * @author  Jeremy Dorn <jeremy@jeremydorn.com>
  */
-class ExtendsSection implements SectionInterface
-{
-	protected $source;
-	protected $body;
-	protected $name;
-	
+class ExtendsSection extends Section
+{	
 	public function __construct($source, $body) {
-		$this->source = $source;
-		$this->name = trim($body,'"\' ');
-		$this->body = $body;
-	}
-	
-	public function getSource() {
-		return $this->source;
-	}
-	
-	public function getName() {
-		return $this->name;
-	}
-	
-	public function setName($name) {
-		
-	}
-	
-	public function getBody() {
-		return $this->body;
-	}
-	
-	public function setBody($body) {
-		$this->body = $body;
-		$this->name = trim($body,'"\' ');
-		$this->source = $this->generateSource();
-	}
-	
-	public function getTitle() {
-		return "Parent Template";
+		parent::__construct($source, $body, '');
 	}
 	
 	public function canRename() {
 		return false;
 	}
 	
-	public function getEditorType() {
-		return self::TYPE_TEXT_INPUT;
+	public function getTitle() {
+		return 'Parent Template';
+	}
+	
+	public function getEditor() {
+		return new TextInputEditor(preg_replace('/[^a-zA-Z0-9_\-]*/','',$this->getTitle()), $this->getBody());
 	}
 	
 	protected function generateSource() {

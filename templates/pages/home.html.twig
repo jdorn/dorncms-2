@@ -1,12 +1,8 @@
 {% extends "layouts/main.html.twig" %}
 
 {% block content %}
-Hello {{name}}
-	{% if 1 > 3 %}
-		!
-	{% endif %}
+	{% include "elements/home/title.html.twig" %}
 {% endblock content %}
-
 
 {% block footer %}
 My Footer
