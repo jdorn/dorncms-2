@@ -1,0 +1,27 @@
+edit:
+    pattern:  /edit
+    defaults: { _controller: DornCMS:Admin:TemplateController:edit, template: pages/home.html }
+    requirements:
+        _method: GET
+
+edittest:
+    pattern:  /edittest
+    defaults: { _controller: DornCMS:Controller:redirect, route: edit }
+    requirements:
+        _method: GET
+
+edit_element:
+    pattern:  /edit_element
+    defaults: { _controller: DornCMS:Admin:TemplateController:edit, template: elements/home/title.html }
+    requirements:
+        _method: GET
+
+login:
+    pattern:  /login
+    defaults: { _controller: DornCMS:Admin:AdminController:login }
+
+cms_home:
+    pattern:  /
+    defaults: { _controller: DornCMS:Admin:AdminController:index }
+    requirements:
+        _method: GET
