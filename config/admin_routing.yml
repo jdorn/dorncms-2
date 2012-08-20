@@ -4,12 +4,6 @@ edit:
     requirements:
         _method: GET
 
-edittest:
-    pattern:  /edittest
-    defaults: { _controller: DornCMS:Controller:redirect, route: edit }
-    requirements:
-        _method: GET
-
 edit_element:
     pattern:  /edit_element
     defaults: { _controller: DornCMS:Admin:TemplateController:edit, template: elements/home/title.html }
@@ -19,6 +13,10 @@ edit_element:
 login:
     pattern:  /login
     defaults: { _controller: DornCMS:Admin:AdminController:login }
+
+logout:
+    pattern:  /logout
+    defaults: { _controller: DornCMS:Admin:AdminController:logout }
 
 cms_home:
     pattern:  /

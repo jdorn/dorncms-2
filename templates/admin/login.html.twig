@@ -3,6 +3,12 @@
 {% block content %}
 	<h1>Login</h1>
 	
+	{% if error %}
+	<div class='error'>
+		{{ error.message }}
+	</div>
+	{% endif %}
+	
 	<form method="post" action="?">
 		<div>
 			<label for='username'>Username:</label>

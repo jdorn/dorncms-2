@@ -48,7 +48,7 @@ class Controller {
 		}
 		
 		//if user isn't authorized to view the page, return a 403
-		$user = $this->kernel->getUser($this->kernel->getSession()->get('dorncms_username'));
+		$user = $this->kernel->getUser($this->kernel->request->getSession()->get('dorncms_username'));
 		if(!$user->authorize($role)) {
 			return new Response('You are not authorized to view this page',403);
 		}
