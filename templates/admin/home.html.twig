@@ -1,0 +1,11 @@
+{% extends "admin/main_layout.html.twig" %}
+
+{% block content %}
+	<h1>DornCMS Home</h1>
+	
+	<ul>
+		<li><a href="{{ path('edit',{template:"layouts/main.html"}) }}">Edit Main Layout Template</a></li>
+		<li><a href="{{ path('edit',{template:"elements/home/title.html"}) }}">Edit Simple Element (WYSIWYG)</a></li>
+		<li><a href="{{ path('logout') }}">Logout</a></li>
+	</ul>
+{% endblock %}

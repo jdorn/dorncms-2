@@ -26,13 +26,8 @@ class Controller {
 	
 	
 	
-	protected function render($template,$params) {
-		$loader = new \Twig_Loader_Filesystem(__DIR__.'/../../templates');
-		$twig = new \Twig_Environment($loader, array(
-			//'cache' => '/tmp/twig_cache',
-		));
-		
-		return new Response($twig->render($template.'.twig',$params));
+	protected function render($template,$params=array()) {		
+		return new Response($this->kernel->twig->render($template.'.twig',$params));
 	}
 	protected function redirect($location,$permanent=false) {
 		return new RedirectResponse($location,$permanent ? 301 : 302);
@@ -41,7 +36,7 @@ class Controller {
 		//if user isn't authenticated, redirect to login page
 		if(!$this->kernel->request->getSession()->get('dorncms_username',false)) {
 			//store this path in the session, so we know what to go back to after loggin in
-			$this->kernel->request->getSession()->set('login_redirect',$this->kernel->request->getPathInfo());
+			$this->kernel->request->getSession()->set('login_redirect',$this->kernel->request->getUri());
 			
 			//redirect to login page
 			return $this->redirect($this->kernel->getUrl('login'));

@@ -65,6 +65,9 @@ class Kernel {
 					if($name === 'attributes') {
 						$call_array[] = $route;
 					}
+					elseif($name === 'request') {
+						$call_array[] = $this->request;
+					}
 					elseif(isset($route[$name])) {
 						$call_array[] = $route[$name];
 					}
@@ -93,6 +96,14 @@ class Kernel {
 	protected function init() {
 		$this->config = $this->getConfig();
 		$this->request = $this->getRequest();
+		
+		//instantiate the Twig environment and load the DornCMS extensions
+		$loader = new \Twig_Loader_Filesystem(__DIR__.'/../../templates');
+		$this->twig = new \Twig_Environment($loader, array(
+			//'cache' => '/tmp/twig_cache',
+		));
+		$dorncms_twig_extensions = new Twig\Extensions($this);
+		$this->twig->addExtension($dorncms_twig_extensions);
 		
 		//initialize routes
 		$routes = new RouteCollection();
@@ -132,6 +143,9 @@ class Kernel {
 		$this->urlMatcher = new UrlMatcher($routes, $context);
 	}
 	public function getUrl($name, $params=array()) {
+		return $this->request->getUriForPath($this->getPath($name, $params));
+	}
+	public function getPath($name, $params=array()) {
 		return $this->urlGenerator->generate($name, $params);
 	}
 	public function getUser($username) {
@@ -144,6 +158,10 @@ class Kernel {
 			throw new \Exception("User '$username' Not Found");
 		}
 	}
+	public function getAssetVersion() {
+		return isset($this->config['asset_version'])? $this->config['asset_version'] : '1';
+	}
+	
 	protected function getRequest() {
 		if($this->request) return $this->request;
 		

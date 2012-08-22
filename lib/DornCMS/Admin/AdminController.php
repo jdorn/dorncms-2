@@ -6,6 +6,10 @@ use DornCMS\Controller;
 use DornCMS\Twig\Parser;
 
 class AdminController extends Controller {	
+	public function indexAction() {
+		return $this->render('admin/home.html');
+	}
+	
 	public function loginAction() {
 		//template params
 		$params = array();

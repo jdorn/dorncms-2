@@ -7,7 +7,9 @@ use DornCMS\Twig;
 use DornCMS\User;
 
 class TemplateController extends Controller {
-	public function editAction($template) {
+	public function editAction($request) {
+		$template = $request->query->get('template');
+		
 		//user must be an admin to edit a template
 		if($response = $this->authorize(User::ROLE_ADMIN)) {
 			return $response;
