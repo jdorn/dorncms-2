@@ -1,6 +1,12 @@
-edit:
-    pattern:  /edit
+edit_template:
+    pattern:  /template/edit
     defaults: { _controller: DornCMS:Admin:TemplateController:edit }
+    requirements:
+        _method: GET
+
+edit_config:
+    pattern:  /config/edit
+    defaults: { _controller: DornCMS:Admin:ConfigController:edit }
     requirements:
         _method: GET
 

@@ -8,7 +8,7 @@ use DornCMS\User;
 
 class TemplateController extends Controller {
 	public function editAction($request) {
-		$template = $request->query->get('template');
+		$template = $request->query->get('file');
 		
 		//user must be an admin to edit a template
 		if($response = $this->authorize(User::ROLE_ADMIN)) {
@@ -20,6 +20,7 @@ class TemplateController extends Controller {
 		//if this contains blocks, use the Ace editor, otherwise, use WYSIWYG.
 		if(preg_match('/\{\%\s*block/',$contents)) {
 			$editor = new Twig\AceEditor(preg_replace('/[^a-zA-Z0-9\-_]/','',$template),$contents);
+			$editor->setLanguage('html');
 		}
 		else {
 			$editor = new Twig\CleEditor(preg_replace('/[^a-zA-Z0-9\-_]/','',$template),$contents);

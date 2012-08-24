@@ -24,7 +24,17 @@ class AceEditor implements EditorInterface
 		<div id="'.$this->id.'" style="position:relative; width: 600px; height: 300px;">'.$this->source.'</div>
 		<script type="text/javascript">
 			var '.$this->id.' = ace.edit("'.$this->id.'");
+			'.$this->id.'.setTheme("ace/theme/github");
+			'.$this->id.'.getSession().setMode("ace/mode/'.$this->getLanguage().'");
 		</script>';
+	}
+	
+	public function setLanguage($language) {
+		$this->options['language'] = $language;
+	}
+	public function getLanguage() {
+		if(isset($this->options['language'])) return $this->options['language'];
+		else return 'text';
 	}
 	
 	public function getCss() {
