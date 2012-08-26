@@ -30,6 +30,7 @@ class Kernel {
 		//Library autoloaders
 		$loader->registerNamespace('Symfony', __DIR__.'/..');
 		$loader->registerNamespace('DornCMS',__DIR__.'/..');
+		$loader->registerNamespace('FrontEnd',__DIR__.'/../../src');
 		$loader->registerPrefix('Twig_',__DIR__.'/../Twig/lib');
 		
 		//SessionHandlerInterface
@@ -94,8 +95,8 @@ class Kernel {
 	
 	
 	protected function init() {
-		$this->config = $this->getConfig();
-		$this->request = $this->getRequest();
+		$this->getConfig();
+		$this->getRequest();
 		
 		//instantiate the Twig environment and load the DornCMS extensions
 		$loader = new \Twig_Loader_Filesystem(__DIR__.'/../../templates');
@@ -104,6 +105,7 @@ class Kernel {
 		));
 		$dorncms_twig_extensions = new Twig\Extensions($this);
 		$this->twig->addExtension($dorncms_twig_extensions);
+		$this->twig->addGlobal('app', $this);
 		
 		//initialize routes
 		$routes = new RouteCollection();
@@ -115,9 +117,6 @@ class Kernel {
 			if(!isset($route['requirements'])) $route['requirements'] = array();
 			if(!isset($route['options'])) $route['options'] = array();
 			
-			//if a security role is required for the route
-			if(isset($route['role'])) $route['defaults']['role'] = $route['role'];
-			
 			$routes->add($name, new Route($route['pattern'], $route['defaults'],$route['requirements'],$route['options']));
 		}
 		
@@ -126,9 +125,6 @@ class Kernel {
 			if(!isset($route['defaults'])) $route['defaults'] = array();
 			if(!isset($route['requirements'])) $route['requirements'] = array();
 			if(!isset($route['options'])) $route['options'] = array();
-			
-			//if a security role is required for the route
-			if(isset($route['role'])) $route['defaults']['role'] = $route['role'];
 			
 			$admin_routes->add($name, new Route($route['pattern'], $route['defaults'],$route['requirements'],$route['options']));
 		}
@@ -148,29 +144,25 @@ class Kernel {
 	public function getPath($name, $params=array()) {
 		return $this->urlGenerator->generate($name, $params);
 	}
-	public function getUser($username) {
-		//look up user in config
-		if(isset($this->config['security']['users'][$username])) {
-			return new User($username, $this->config['security']['users'][$username]);
-		}
-		//user not found in config (should almost never happen)
-		else {
-			throw new \Exception("User '$username' Not Found");
-		}
-	}
 	public function getAssetVersion() {
 		return isset($this->config['asset_version'])? $this->config['asset_version'] : '1';
 	}
 	
-	protected function getRequest() {
+	public function getSession() {
+		return $this->request->getSession();
+	}
+	
+	public function getRequest() {
 		if($this->request) return $this->request;
 		
 		$request = Request::createFromGlobals();
 		$request->setSession(new Session());
 		
+		$this->request = $request;
+		
 		return $request;
 	}
-	protected function getConfig() {
+	public function getConfig() {
 		if($this->config) return $this->config;
 		
 		//get the main config settings
@@ -191,6 +183,8 @@ class Kernel {
 		//load admin routing rules
 		$config['admin_routing'] = Yaml::parse(__DIR__.'/../../config/admin_routing.yml');
 		if(!$config['admin_routing']) $config['admin_routing'] = array();
+		
+		$this->config = $config;
 		
 		return $config;
 	}

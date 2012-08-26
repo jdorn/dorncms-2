@@ -1,0 +1,30 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block content %}
+<h1>Contact Us</h1>
+
+{% if app.session.hasFlash('notice') %}
+<div class='notice'>
+	{{ app.session.flash('notice') }}
+</div>
+{% endif %}
+
+{% if app.session.hasFlash('error') %}
+<div class='error'>
+	Error: {{ app.session.flash('error') }}
+</div>
+{% endif %}
+
+<form method="post" action="{{ url("contact_submit") }}">
+	<div>
+		<label for='contact_email'>Your Email Address</label>
+		<input id='contact_email' name='from' />
+	</div>
+	<div>
+		<label for='contact_message'>Message</label>
+		<textarea id='contact_message' name='message' style='width: 400px; height: 200px;'></textarea>
+	</div>
+	<input type='submit' value='Submit' />
+</form>
+
+{% endblock content %}

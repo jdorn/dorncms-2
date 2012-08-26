@@ -22,6 +22,7 @@ class Extensions extends \Twig_Extension
 			'url'=>new \Twig_Function_Function('DornCMS\Twig\Extensions::url'),
 			'path'=>new \Twig_Function_Function('DornCMS\Twig\Extensions::path'),
 			'asset'=>new \Twig_Function_Function('DornCMS\Twig\Extensions::asset'),
+			'param'=>new \Twig_Function_Function('DornCMS\Twig\Extensions::param'),
 		);
 	}
 	public static function url($name,$params=array()) {
@@ -37,5 +38,8 @@ class Extensions extends \Twig_Extension
 		$url .= 'v='.self::$kernel->getAssetVersion();
 		
 		return self::$kernel->request->getBasePath().'/'.$url;
+	}
+	public static function param($name,$default=null) {
+		return isset(self::$kernel->config['parameters'][$name])? self::$kernel->config['parameters'][$name] : $default;
 	}
 }

@@ -2,11 +2,9 @@
 namespace DornCMS\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
-use DornCMS\Controller;
 use DornCMS\Twig;
-use DornCMS\User;
 
-class TemplateController extends Controller {
+class TemplateController extends AdminController {
 	public function editAction($request) {
 		$template = $request->query->get('file');
 		

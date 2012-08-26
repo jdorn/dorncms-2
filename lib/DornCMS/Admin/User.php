@@ -1,5 +1,5 @@
 <?php
-namespace DornCMS;
+namespace DornCMS\Admin;
 
 class User {
 	protected $username;

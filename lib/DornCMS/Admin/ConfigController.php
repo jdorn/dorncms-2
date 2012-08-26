@@ -2,11 +2,9 @@
 namespace DornCMS\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
-use DornCMS\User;
-use DornCMS\Controller;
 use DornCMS\Twig;
 
-class ConfigController extends Controller {
+class ConfigController extends AdminController {
 	public function editAction($request) {
 		$file = $request->query->get('file');
 		
