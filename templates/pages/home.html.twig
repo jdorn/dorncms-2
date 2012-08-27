@@ -1,9 +1,7 @@
 {% extends "layouts/main.html.twig" %}
 
 {% block content %}
-	{% include "elements/home/title.html.twig" %}
+	<h1>{% include "elements/home/title.html.twig" %}</h1>
+	
+	{% include "elements/home/content.html.twig" %}
 {% endblock content %}
-
-{% block footer %}
-My Footer
-{% endblock footer %}
