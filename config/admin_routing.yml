@@ -10,6 +10,12 @@ edit_config:
     requirements:
         _method: GET
 
+list_templates:
+    pattern:  /template/list
+    defaults: { _controller: DornCMS:Admin:TemplateController:list }
+    requirements:
+        _method: GET|POST
+
 login:
     pattern:  /login
     defaults: { _controller: DornCMS:Admin:AdminController:login }

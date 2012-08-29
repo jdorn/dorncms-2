@@ -1,0 +1,32 @@
+{% extends "admin/main_layout.html.twig" %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type='text/javascript' src='{{asset("admin/js/jqueryFileTree.js")}}'></script>
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel='stylesheet' href='{{asset("admin/css/jqueryFileTree.css")}}' />
+{% endblock %}
+
+{% block content %}
+	<h1>List Templates</h1>
+	
+	<div id='browser'></div>
+	
+	<script>
+	$(document).ready( function() {
+		var edit_url = "{{ url("edit_template",{ file: "__file__" }) }}";
+		
+		$('#browser').fileTree({ 
+			root: '/',
+			script: '{{ url("list_templates") }}'
+		}, function(file) {
+			if(file.substr(0,1) == '/') file = file.substr(1);
+			
+			window.location.href = edit_url.replace("__file__", file);
+		});
+	});
+	</script>
+	
+{% endblock %}

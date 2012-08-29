@@ -4,27 +4,18 @@ namespace DornCMS\Admin;
 use Symfony\Component\HttpFoundation\Response;
 use DornCMS\Twig;
 
-class TemplateController extends AdminController {
-	public function editAction($request) {
-		$template = $request->query->get('file');
-		
+class TemplateController extends FileSystemController {
+	public function editAction($request) {		
 		//user must be an admin to edit a template
 		if($response = $this->authorize(User::ROLE_ADMIN)) {
 			return $response;
 		}
 		
-		$contents = file_get_contents(__DIR__.'/../../../templates/'.$template.'.twig');
+		$template = $request->query->get('file');
 		
-		//if this contains blocks, use the Ace editor, otherwise, use WYSIWYG.
-		if(preg_match('/\{\%\s*block/',$contents)) {
-			$editor = new Twig\AceEditor(preg_replace('/[^a-zA-Z0-9\-_]/','',$template),$contents);
-			$editor->setLanguage('html');
-		}
-		else {
-			$editor = new Twig\CleEditor(preg_replace('/[^a-zA-Z0-9\-_]/','',$template),$contents);
-		}
+		$editor = $this->getEditor($template,'templates/');
 		
-		return $this->render('admin/edit_template.html',array(
+		return $this->render('admin/template/edit.html',array(
 			'template'=>array(
 				'editor'=>$editor,
 				'name'=>$template
@@ -33,59 +24,46 @@ class TemplateController extends AdminController {
 			'stylesheets'=>$editor->getCss(),
 		));
 	}
-	
-	
-	
-	
-	protected function getFileList($directory) {
-		$_POST['dir'] = urldecode($_POST['dir']);
-
-		$root = __DIR__.'/../../web/';
+	public function createAction($file, $type='layout') {
 		
-		if (false !== strpos($name, "\0")) {
-			throw new \Exception('A file path cannot contain NUL bytes.');
+	}
+	public function deleteAction($file) {
+		
+	}
+	public function listAction($request) {	
+		if($request->request->get('dir',null) !== null) {
+			return $this->getFileList('/templates', $request->request->get('dir'), array('admin'));
 		}
 		
-        $directory = preg_replace('#/{2,}#', '/', strtr($directory, '\\', '/'));
-		$parts = explode('/', $directory);
-		$level = 0;
-		foreach ($parts as $part) {
-			if ('..' === $part) {
-				--$level;
-			} elseif ('.' !== $part) {
-				++$level;
-			}
-
-			if ($level < 0) {
-				throw new \Exception(sprintf('Cannot load path outside configured directories (%s).', $directory));
-			}
+		//user must be an admin
+		if($response = $this->authorize(User::ROLE_ADMIN)) {
+			return $response;
 		}
-
-		if( file_exists($root . $_POST['dir']) ) {
-			$files = scandir($root . $_POST['dir']);
-			natcasesort($files);
-			if( count($files) > 2 ) { /* The 2 accounts for . and .. */
-				echo "<ul class=\"jqueryFileTree\" style=\"display: none;\">";
-				// All dirs
-				foreach( $files as $file ) {
-					if( file_exists($root . $_POST['dir'] . $file) && $file != '.' && $file != '..' && is_dir($root . $_POST['dir'] . $file) ) {
-						echo "<li class=\"directory collapsed\"><a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "/\">" . htmlentities($file) . "</a></li>";
-					}
-				}
-				// All files
-				foreach( $files as $file ) {
-					if( file_exists($root . $_POST['dir'] . $file) && $file != '.' && $file != '..' && !is_dir($root . $_POST['dir'] . $file) ) {
-						$ext = preg_replace('/^.*\./', '', $file);
-						if($ext === 'php') continue;
-						
-						echo "<li class=\"file ext_$ext\"><a href=\"#\" rel=\"" . htmlentities($_POST['dir'] . $file) . "\">" . htmlentities($file) . "</a></li>";
-					}
-				}
-				echo "</ul>";	
-			}
-		}
-		else {
-			throw new \Exception("Directory doesn't exist");
-		}
+		
+		return $this->render('admin/template/list.html',array(
+			
+		));
+	}
+	
+	public function createRevisionAction($file, $contents) {
+		
+	}
+	public function deleteRevisionAction($file, $revision) {
+		
+	}
+	public function diffRevisionAction($file, $revision) {
+		
+	}
+	public function restoreRevisionAction($file, $revision) {
+		
+	}
+	public function listRevisionsAction($file) {
+		
+	}
+	
+	
+	
+	protected function getDefaultContents($type='layout') {
+		
 	}
 }

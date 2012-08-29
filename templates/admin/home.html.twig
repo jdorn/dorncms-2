@@ -4,9 +4,8 @@
 	<h1>DornCMS Home</h1>
 	
 	<ul>
-		<li><a href="{{ path('edit_template',{file:"layouts/main.html"}) }}">Edit Main Layout Template</a></li>
-		<li><a href="{{ path('edit_template',{file:"elements/home/content.html"}) }}">Edit Simple Element (WYSIWYG)</a></li>
-		<li><a href="{{ path('edit_config',{file:"routing"}) }}">Edit Routing Rules</a></li>
+		<li><a href="{{ path('list_templates') }}">Edit Templates</a></li>
+		<li><a href="{{ path('edit_config',{file:"routing.yml"}) }}">Edit Routing Rules</a></li>
 		<li><a href="{{ path('logout') }}">Logout</a></li>
 	</ul>
 {% endblock %}

@@ -4,7 +4,7 @@ namespace DornCMS\Admin;
 use Symfony\Component\HttpFoundation\Response;
 use DornCMS\Twig;
 
-class ConfigController extends AdminController {
+class ConfigController extends FileSystemController {
 	public function editAction($request) {
 		$file = $request->query->get('file');
 		
@@ -13,13 +13,9 @@ class ConfigController extends AdminController {
 			return $response;
 		}
 		
-		$contents = file_get_contents(__DIR__.'/../../../config/'.$file.'.yml');
+		$editor = $this->getEditor($file,'config/');
 		
-		//if this contains blocks, use the Ace editor, otherwise, use WYSIWYG.
-		$editor = new Twig\AceEditor(preg_replace('/[^a-zA-Z0-9\-_]/','',$file),$contents);
-		$editor->setLanguage("yaml");
-		
-		return $this->render('admin/edit_config.html',array(
+		return $this->render('admin/config/edit.html',array(
 			'file'=>array(
 				'editor'=>$editor,
 				'name'=>$file
