@@ -10,10 +10,53 @@
 {% endblock %}
 
 {% block content %}
-	<h1>List Templates</h1>
-	
-	<div id='browser'></div>
-	
+
+<div id='editor_holder'>
+	<div id='left-side' style='float:left; width: 180px;'>
+		<div style='height: 35px; background-color: #ccc;'>
+			<a href='#'>refresh</a>
+		</div>
+		<div id='browser'></div>
+	</div>
+	<div id='right-side' style='margin-left: 180px;'>
+		<div class="wrap">
+			<ul class="tab-list" id='tab-list'>
+			   <li>
+				 <span class='tab'>
+					<a href='#page-1' class='link'>Page 1</a>
+					<a href='#' class='close'>x</a>
+				</span>
+			   </li>
+			   <li class="current">
+				 <span class='tab'>
+					<a href='#page-1' class='link'>A Longer Title</a>
+					<a href='#' class='close'>x</a>
+				</span>
+			   </li>
+			   <li>
+				 <span class='tab'>
+					<a href='#page-1' class='link'>Page 3</a>
+					<a href='#' class='close'>x</a>
+				</span>
+			   </li>
+			   <li>
+				 <span class='tab'>
+					<a href='#page-1' class='link'>Page 4</a>
+					<a href='#' class='close'>x</a>
+				</span>
+			   </li>
+			</ul>
+			<div class="clearfix"></div>
+		</div>
+		<div id='editor-holder' style='background-color: #c86; height: 500px;'>
+			
+		</div>
+		<div id='button-holder' style='background-color: #ccc; height: 35px;'>
+			<a href='#'>Preview</a>
+			<a href='#'>Publish</a>
+		</div>
+	</div>
+</div>
 	<script>
 	$(document).ready( function() {
 		var edit_url = "{{ url("edit_template",{ file: "__file__" }) }}";

@@ -3,6 +3,7 @@
 	<head>
 		{% block javascripts %}
 			<script src="{{ asset('admin/js/jquery-1.8.0.min.js') }}"></script>
+			<script src="{{ asset('admin/js/scripts.js') }}"></script>
 		{% endblock %}
 		{% block stylesheets %}
 			<link href="{{ asset('admin/css/style.css') }}" rel='stylesheet' language="text/css"/>
@@ -11,9 +12,9 @@
 	<body>
 		{% block startofbody %}{% endblock %}
 		
-		<header style='background: #ccc; padding: 10px 10px 20px;'>
+		<header style='background: #ccc; height: 30px; margin:0; padding: 0;'>
 		{% block header %}
-			<h1>DornCMS 2</h1>
+			<h1 style='font-size: 1.1em; margin: 0; font-family: arial;'>DornCMS 2</h1>
 		{% endblock %}
 		</header>
 		
@@ -21,6 +22,7 @@
 		{% block content %}
 		
 		{% endblock %}
+			<div style='clear:both;'></div>
 		</div>
 		
 		<footer>
