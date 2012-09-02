@@ -15,13 +15,14 @@ class TemplateController extends FileSystemController {
 		
 		$editor = $this->getEditor($template,'templates/');
 		
-		return $this->render('admin/template/edit.html',array(
-			'template'=>array(
+		return $this->render('admin/template/editor.html',array(
+			'editor'=>array(
 				'editor'=>$editor,
 				'name'=>$template
 			),
 			'javascripts'=>$editor->getJs(),
 			'stylesheets'=>$editor->getCss(),
+			'ajax'=>$request->query->get('ajax',false)
 		));
 	}
 	public function createAction($file, $type='layout') {
@@ -31,16 +32,16 @@ class TemplateController extends FileSystemController {
 		
 	}
 	public function listAction($request) {	
-		if($request->request->get('dir',null) !== null) {
-			return $this->getFileList('/templates', $request->request->get('dir'), array('admin'));
-		}
-		
 		//user must be an admin
 		if($response = $this->authorize(User::ROLE_ADMIN)) {
 			return $response;
 		}
 		
-		return $this->render('admin/template/list.html',array(
+		return $this->getFileList('/templates', $request->request->get('dir'), array('admin'));
+	}
+	
+	public function indexAction($request) {		
+		return $this->render('admin/template/index.html',array(
 			
 		));
 	}

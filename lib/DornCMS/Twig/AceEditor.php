@@ -21,7 +21,7 @@ class AceEditor implements EditorInterface
 	
 	public function getEditorHtml() {
 		return '
-		<div id="'.$this->id.'" style="position:relative; width: 600px; height: 300px;">'.htmlentities($this->source).'</div>
+		<div id="'.$this->id.'" style="position:relative; width: 100%; height: 100%;">'.htmlentities($this->source).'</div>
 		<script type="text/javascript">
 			var '.$this->id.' = ace.edit("'.$this->id.'");
 			'.$this->id.'.setTheme("ace/theme/github");

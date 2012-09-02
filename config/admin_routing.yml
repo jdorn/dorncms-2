@@ -4,17 +4,41 @@ edit_template:
     requirements:
         _method: GET
 
+save_template:
+    pattern:  /template/save
+    defaults: { _controller: DornCMS:Admin:TemplateController:save }
+    requirements:
+        _method: POST
+
+preview_template:
+    pattern:  /template/preview
+    defaults: { _controller: DornCMS:Admin:TemplateController:preview }
+    requirements:
+        _method: POST
+
+revert_template:
+    pattern:  /template/revert
+    defaults: { _controller: DornCMS:Admin:TemplateController:revert }
+    requirements:
+        _method: POST
+
+list_templates:
+    pattern:  /templates/list
+    defaults: { _controller: DornCMS:Admin:TemplateController:list }
+    requirements:
+        _method: POST
+
+manage_templates:
+    pattern:  /templates
+    defaults: { _controller: DornCMS:Admin:TemplateController:index }
+    requirements:
+        _method: GET
+
 edit_config:
     pattern:  /config/edit
     defaults: { _controller: DornCMS:Admin:ConfigController:edit }
     requirements:
         _method: GET
-
-list_templates:
-    pattern:  /template/list
-    defaults: { _controller: DornCMS:Admin:TemplateController:list }
-    requirements:
-        _method: GET|POST
 
 login:
     pattern:  /login

@@ -21,9 +21,11 @@ class CleEditor implements EditorInterface
 	
 	public function getEditorHtml() {
 		return '
+		<div style="height: 100%; width: 100%;">
 		<textarea id="'.$this->id.'" name="'.$this->id.'">'.$this->source.'</textarea>
+		</div>
 		<script type="text/javascript">
-			$("#'.$this->id.'").cleditor();
+			$("#'.$this->id.'").cleditor({width:"100%", height:"100%"});
 		</script>';
 	}
 	

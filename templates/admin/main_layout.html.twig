@@ -7,16 +7,25 @@
 		{% endblock %}
 		{% block stylesheets %}
 			<link href="{{ asset('admin/css/style.css') }}" rel='stylesheet' language="text/css"/>
+			{% if ajax %}
+			<style>
+			html, body, #content {
+				width: 100%; height: 100%;
+			}
+			</style>
+			{% endif %}
 		{% endblock %}
 	</head>
 	<body>
 		{% block startofbody %}{% endblock %}
 		
+		{% if not ajax %}
 		<header style='background: #ccc; height: 30px; margin:0; padding: 0;'>
 		{% block header %}
 			<h1 style='font-size: 1.1em; margin: 0; font-family: arial;'>DornCMS 2</h1>
 		{% endblock %}
 		</header>
+		{% endif %}
 		
 		<div id='content'>
 		{% block content %}
@@ -25,11 +34,13 @@
 			<div style='clear:both;'></div>
 		</div>
 		
+		{% if not ajax %}
 		<footer>
 		{% block footer %}
 		
 		{% endblock %}
 		</footer>
+		{% endif %}
 		
 		{% block endofbody %}{% endblock %}
 	</body>
