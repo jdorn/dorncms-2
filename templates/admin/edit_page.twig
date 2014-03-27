@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Edit Page - {{ page }}</title>
   <link rel='stylesheet' href='{{ baseUrl() }}/public/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='{{ baseUrl() }}/public/js/themes/modern.min.css'>
   <title>{{ parameters.business_name }} - {{ meta.title }}</title>
 </head>
 <body>
@@ -13,31 +15,39 @@
   </div>
   <div class='row'>
     <div class='col-md-6'>
-      <div id='meta_form'></div>
+      <div id='content_form'></div>
+      <button class='btn btn-primary' id='save_content'>Save Content</button>
     </div>
     <div class='col-md-6'>
-      <div id='content_form'></div>
+      <div id='meta_form'></div>
+      <button class='btn btn-primary' id='save_meta'>Save Meta Info</button>
     </div>
   </div>
   <div class='row'>
     <div class='col-md-12'>
       <div id='template_form'></div>
+      <button class='btn btn-primary' id='save_template'>Save Template</button>
     </div>
   </div>
 </div>
 <script src='{{ baseUrl() }}/public/js/jsoneditor.js'></script>
 <script src='{{ baseUrl() }}/public/js/jquery-2.1.0.min.js'></script>
+<script src='{{ baseUrl() }}/public/js/jquery.sceditor.xhtml.min.js'></script>
 <script>
 JSONEditor.defaults.theme = 'bootstrap3';
 $.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
   var meta = new JSONEditor(document.getElementById('meta_form'),{
     schema: data.metaschema,
-    startval: data.meta
+    startval: data.meta,
+    required_by_default: true,
+    no_additional_properties: true
   });
   
   var content = new JSONEditor(document.getElementById('content_form'),{
     schema: data.contentschema,
-    startval: data.content
+    startval: data.content,
+    required_by_default: true,
+    no_additional_properties: true
   });
   
   var template = new JSONEditor(document.getElementById('template_form'),{
@@ -53,7 +63,9 @@ $.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
     },
     startval: {
       template: data.template
-    }
+    },
+    required_by_default: true,
+    no_additional_properties: true
   });
 });
 </script>
