@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "title": "Meta Info",
+  "properties": {
+    "title": {
+      "type": "string"
+    }
+  }
+}

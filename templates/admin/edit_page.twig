@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel='stylesheet' href='{{ baseUrl() }}/public/css/bootstrap.min.css'>
+  <title>{{ parameters.business_name }} - {{ meta.title }}</title>
+</head>
+<body>
+<div class='container'>
+  <div class='row'>
+    <div class='col-md-12'>
+      <h1>Edit Page - {{ page }}</h1>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-6'>
+      <div id='meta_form'></div>
+    </div>
+    <div class='col-md-6'>
+      <div id='content_form'></div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12'>
+      <div id='template_form'></div>
+    </div>
+  </div>
+</div>
+<script src='{{ baseUrl() }}/public/js/jsoneditor.js'></script>
+<script src='{{ baseUrl() }}/public/js/jquery-2.1.0.min.js'></script>
+<script>
+JSONEditor.defaults.theme = 'bootstrap3';
+$.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
+  var meta = new JSONEditor(document.getElementById('meta_form'),{
+    schema: data.metaschema,
+    startval: data.meta
+  });
+  
+  var content = new JSONEditor(document.getElementById('content_form'),{
+    schema: data.contentschema,
+    startval: data.content
+  });
+  
+  var template = new JSONEditor(document.getElementById('template_form'),{
+    schema: {
+      "type": "object",
+      "title": "Page Template",
+      "properties": {
+        "template": {
+          "type": "string",
+          "format": "html"
+        }
+      }
+    },
+    startval: {
+      template: data.template
+    }
+  });
+});
+</script>
+</body>
+</html>

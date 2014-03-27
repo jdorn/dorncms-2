@@ -1,5 +1,6 @@
 {
   "type": "object",
+  "title": "Page Content",
   "properties": {
     "message": {
       "type": "string"
