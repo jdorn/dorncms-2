@@ -1,0 +1,8 @@
+{
+  "name": "jdorn/dorncms-2",
+  "require": {
+    "twig/twig": "1.*",
+    "slim/slim": "2.*",
+    "slim/views": "0.1.*"
+  }  
+}
