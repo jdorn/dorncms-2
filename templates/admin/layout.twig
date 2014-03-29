@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}DornCMS{% endblock %}</title>
+  <link rel='stylesheet' href='{{ baseUrl() }}/public/admin/css/bootstrap.min.css'>
+  <style>body { padding-bottom: 70px; padding-top: 50px; }</style>
+  {% block head %}{% endblock %}
+</head>
+<body>
+<nav class='navbar navbar-default navbar-fixed-top'>
+  <div class='container'>
+    {% block topnav %}
+    <ul class='nav navbar-nav'>
+      <li><a href='{{ baseUrl() }}'>View Site</a></li>
+      <li><a href='{{ urlFor("admin") }}'>Admin Home</a></li>
+    </ul>
+    <ul class='nav navbar-nav navbar-right'>
+      <li><a href='{{ urlFor("logout") }}'>Log Out</a></li>
+    </ul>
+    {% endblock %}
+  </div>
+</nav>
+{% block navbars %}{% endblock %}
+
+<div class='container'>
+  {% block content %}{% endblock %}
+</div>
+<script src='{{ baseUrl() }}/public/admin/js/jquery-2.1.0.min.js'></script>
+{% block js %}{% endblock %}
+</body>
+</html>

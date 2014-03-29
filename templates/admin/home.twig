@@ -1,0 +1,18 @@
+{% extends "admin/layout.twig" %}
+
+{% block title %}DornCMS - Home{% endblock %}
+
+{% block content %}
+<div class='row'>
+  <div class='col-md-12'>
+    <h2>Admin Home</h2>
+    <p>Here you can configure your site and edit pages.</p>
+    
+    <h3>Edit Pages</h3>
+    <ul>
+    {% for page in pages %}
+      <li><a href='{{urlFor('edit_page',{"page": page})}}'>{{page}}</a></li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

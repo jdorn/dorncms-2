@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Edit Page - {{ page }}</title>
-  <link rel='stylesheet' href='{{ baseUrl() }}/public/admin/css/bootstrap.min.css'>
-  <style>body { padding-bottom: 70px; padding-top: 50px; }</style>
-  <title>{{ parameters.business_name }} - {{ meta.title }}</title>
-</head>
-<body>
-<nav class='navbar navbar-default navbar-fixed-top'>
-  <div class='container'>
-    <ul class='nav navbar-nav'>
-      <li><a href='#'>View Site</a></li>
-      <li><a href='#'>Admin Home</a></li>
-    </ul>
-    <ul class='nav navbar-nav navbar-right'>
-      <li><a href='#'>Log Out</a></li>
-    </ul>
-  </div>
-</nav>
+{% extends "admin/layout.twig" %}
+
+{% block title %}Edit Page - {{ page }}{% endblock %}
+
+{% block navbars %}
 <nav class='navbar navbar-default navbar-fixed-bottom'>
   <div class='container'>
       <button id='save' class='btn btn-primary navbar-btn'>Save Changes</button>
@@ -25,7 +10,9 @@
       <button id='cancel' class='btn btn-danger navbar-btn'>Cancel</button>
   </div>
 </nav>
-<div class='container'>
+{% endblock %}
+
+{% block content %}
   <div class='row'>
     <div class='col-md-12'>
       <h1>Edit Page - {{ page }}</h1>
@@ -44,9 +31,10 @@
       <div id='template_form'></div>
     </div>
   </div>
-</div>
+{% endblock %}
+
+{% block js %}
 <script src='{{ baseUrl() }}/public/admin/js/jsoneditor.js'></script>
-<script src='{{ baseUrl() }}/public/admin/js/jquery-2.1.0.min.js'></script>
 <script src='{{ baseUrl() }}/public/admin/js/ace/ace.js'></script>
 <script src='{{ baseUrl() }}/public/admin/js/ace/mode-twig.js'></script>
 <script>
@@ -145,5 +133,4 @@ $.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
   });
 });
 </script>
-</body>
-</html>
+{% endblock %}
