@@ -21,6 +21,26 @@ $app->get('/home', function() use($app) {
   $app->render('pages/home.twig',$data);
 }); 
 
+$app->post('/admin/preview', function() use($app) {
+  $post = $app->request()->post();
+  
+  $parameters = '';
+  if(isset($post['parameters'])) $parameters = $post['parameters'];
+  else $parameters = file_get_contents('site/parameters.json');
+
+  $data = array(
+    'meta'=>json_decode($post['meta']),
+    'content'=>json_decode($post['content']),
+    'parameters'=>json_decode($parameters)
+  );
+  
+  // Create temp file on disk to render the preview and then delete
+  $filename = '__preview_'.microtime(true).'.twig';
+  file_put_contents('templates/'.$filename,json_decode($post['template'])->template);
+  $app->render($filename,$data);
+  unlink('templates/'.$filename);
+});
+
 $app->get('/admin/edit/page/home', function() use($app) {
   $app->render('admin/edit_page.twig',array(
     'page'=>'home'

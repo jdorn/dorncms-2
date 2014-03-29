@@ -2,11 +2,29 @@
 <html>
 <head>
   <title>Edit Page - {{ page }}</title>
-  <link rel='stylesheet' href='{{ baseUrl() }}/public/css/bootstrap.min.css'>
-  <link rel='stylesheet' href='{{ baseUrl() }}/public/js/themes/modern.min.css'>
+  <link rel='stylesheet' href='{{ baseUrl() }}/public/admin/css/bootstrap.min.css'>
+  <style>body { padding-bottom: 70px; padding-top: 50px; }</style>
   <title>{{ parameters.business_name }} - {{ meta.title }}</title>
 </head>
 <body>
+<nav class='navbar navbar-default navbar-fixed-top'>
+  <div class='container'>
+    <ul class='nav navbar-nav'>
+      <li><a href='#'>View Site</a></li>
+      <li><a href='#'>Admin Home</a></li>
+    </ul>
+    <ul class='nav navbar-nav navbar-right'>
+      <li><a href='#'>Log Out</a></li>
+    </ul>
+  </div>
+</nav>
+<nav class='navbar navbar-default navbar-fixed-bottom'>
+  <div class='container'>
+      <button id='save' class='btn btn-primary navbar-btn'>Save Changes</button>
+      <button id='preview' class='btn btn-info navbar-btn'>Preview Changes</button>
+      <button id='cancel' class='btn btn-danger navbar-btn'>Cancel</button>
+  </div>
+</nav>
 <div class='container'>
   <div class='row'>
     <div class='col-md-12'>
@@ -16,23 +34,21 @@
   <div class='row'>
     <div class='col-md-6'>
       <div id='content_form'></div>
-      <button class='btn btn-primary' id='save_content'>Save Content</button>
     </div>
     <div class='col-md-6'>
       <div id='meta_form'></div>
-      <button class='btn btn-primary' id='save_meta'>Save Meta Info</button>
     </div>
   </div>
   <div class='row'>
     <div class='col-md-12'>
       <div id='template_form'></div>
-      <button class='btn btn-primary' id='save_template'>Save Template</button>
     </div>
   </div>
 </div>
-<script src='{{ baseUrl() }}/public/js/jsoneditor.js'></script>
-<script src='{{ baseUrl() }}/public/js/jquery-2.1.0.min.js'></script>
-<script src='{{ baseUrl() }}/public/js/jquery.sceditor.xhtml.min.js'></script>
+<script src='{{ baseUrl() }}/public/admin/js/jsoneditor.js'></script>
+<script src='{{ baseUrl() }}/public/admin/js/jquery-2.1.0.min.js'></script>
+<script src='{{ baseUrl() }}/public/admin/js/ace/ace.js'></script>
+<script src='{{ baseUrl() }}/public/admin/js/ace/mode-twig.js'></script>
 <script>
 JSONEditor.defaults.theme = 'bootstrap3';
 $.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
@@ -57,8 +73,11 @@ $.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
       "properties": {
         "template": {
           "type": "string",
-          "format": "html"
+          "format": "twig"
         }
+      },
+      "options": {
+        "collapsed": true
       }
     },
     startval: {
@@ -66,6 +85,63 @@ $.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
     },
     required_by_default: true,
     no_additional_properties: true
+  });
+  
+  $("#preview").on('click',function() {
+    $.post('{{ baseUrl() }}/admin/preview',{
+      content: JSON.stringify(content.getValue()),
+      meta: JSON.stringify(meta.getValue()),
+      template: JSON.stringify(template.getValue())
+    },function(resp) {
+      var preview = $("<div></div>")
+        .css({
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 999999,
+          background: 'rgba(0,0,0,.9)'
+        })
+        .appendTo(document.body);
+      
+      var iframe_holder = $("<div></div>")
+        .css({
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 50
+        })
+        .appendTo(preview);
+      
+      var iframe = $("<iframe></iframe>")
+        .attr('src','data:text/html;charset=utf-8,'+escape(resp))
+        .css({
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          background: 'white'
+        })
+        .attr('width','100%')
+        .attr('height','100%')
+        .appendTo(iframe_holder);
+      
+      var close = $("<button></button>")
+        .addClass('btn btn-primary')
+        .text('Close Preview')
+        .css({
+          position: 'absolute',
+          bottom: 5,
+          left: 10
+        })
+        .appendTo(preview)
+        .on('click',function() {
+          preview.remove();
+        });
+      
+      console.log(resp);
+    });
   });
 });
 </script>
