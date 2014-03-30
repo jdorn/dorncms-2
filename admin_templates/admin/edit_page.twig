@@ -34,12 +34,12 @@
 {% endblock %}
 
 {% block js %}
-<script src='{{ baseUrl() }}/public/admin/js/jsoneditor.js'></script>
-<script src='{{ baseUrl() }}/public/admin/js/ace/ace.js'></script>
-<script src='{{ baseUrl() }}/public/admin/js/ace/mode-twig.js'></script>
+<script src='{{ baseUrl() }}/admin_static/js/jsoneditor.js'></script>
+<script src='{{ baseUrl() }}/admin_static/js/ace/ace.js'></script>
+<script src='{{ baseUrl() }}/admin_static/js/ace/mode-twig.js'></script>
 <script>
 JSONEditor.defaults.theme = 'bootstrap3';
-$.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
+$.getJSON('{{ urlFor("admin_api_page",{"page": page}) }}',function(data) {
   var meta = new JSONEditor(document.getElementById('meta_form'),{
     schema: data.metaschema,
     startval: data.meta,
@@ -76,7 +76,7 @@ $.getJSON('{{ baseUrl() }}/admin/api/page/home',function(data) {
   });
   
   $("#preview").on('click',function() {
-    $.post('{{ baseUrl() }}/admin/preview',{
+    $.post('{{ urlFor("admin_preview") }}',{
       content: JSON.stringify(content.getValue()),
       meta: JSON.stringify(meta.getValue()),
       template: JSON.stringify(template.getValue())

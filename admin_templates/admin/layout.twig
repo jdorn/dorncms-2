@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>{% block title %}DornCMS{% endblock %}</title>
-  <link rel='stylesheet' href='{{ baseUrl() }}/public/admin/css/bootstrap.min.css'>
+  <link rel='stylesheet' href='{{ baseUrl() }}/admin_static/css/bootstrap.min.css'>
   <style>body { padding-bottom: 70px; padding-top: 50px; }</style>
   {% block head %}{% endblock %}
 </head>
@@ -25,7 +25,7 @@
 <div class='container'>
   {% block content %}{% endblock %}
 </div>
-<script src='{{ baseUrl() }}/public/admin/js/jquery-2.1.0.min.js'></script>
+<script src='{{ baseUrl() }}/admin_static/js/jquery-2.1.0.min.js'></script>
 {% block js %}{% endblock %}
 </body>
 </html>

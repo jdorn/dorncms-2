@@ -1,1 +1,5 @@
 vendor/*
+config/config.json
+config/parameters.schema.json
+config/meta.schema.json
+site/*
