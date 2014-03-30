@@ -75,11 +75,28 @@ $.getJSON('{{ urlFor("admin_api_page",{"page": page}) }}',function(data) {
     no_additional_properties: true
   });
   
+  $("#cancel").on('click',function() {
+    // TODO: just reload the forms instead of the whole page
+    window.location.reload(true);
+  });
+  
+  $("#save").on('click', function() {
+    $.post('{{ urlFor("admin_api_page_post",{"page": page}) }}',{
+      content: JSON.stringify(content.getValue()),
+      meta: JSON.stringify(meta.getValue()),
+      template: template.getValue().template
+    },function(resp) {
+      if(resp.status) {
+        alert('saved');
+      }
+    });
+  });
+  
   $("#preview").on('click',function() {
     $.post('{{ urlFor("admin_preview") }}',{
       content: JSON.stringify(content.getValue()),
       meta: JSON.stringify(meta.getValue()),
-      template: JSON.stringify(template.getValue())
+      template: template.getValue().template
     },function(resp) {
       var preview = $("<div></div>")
         .css({

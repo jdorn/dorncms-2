@@ -112,11 +112,11 @@ $app->post('/admin/preview', $authenticate, function() use($app) {
     'parameters'=>$parameters
   );
   
-  $app->previewPage(json_decode($post['template'])->template,$data);
+  $app->previewPage($post['template'],$data);
 })->name('admin_preview');
 
 $app->get('/admin', $authenticate, function() use($app) {
-  $pages = scandir('site/pages/');
+  $pages = scandir($app->config->sitedir.'pages/');
   $pages = array_filter($pages,function($page) {
     if($page[0]==='.') return false;
     return true;
@@ -142,7 +142,15 @@ $app->get('/admin/api/page/:page', $authenticate, function($page) use($app) {
 })->name('admin_api_page');
 
 $app->post('/admin/api/page/:page', $authenticate, function($page) use($app) {
-  // TODO: save page data
+  $post = $app->request()->post();
+  
+  // TODO: revision history
+  // TODO: error handling
+  file_put_contents($app->config->sitedir.'pages/'.$page.'/meta.json',$post['meta']);
+  file_put_contents($app->config->sitedir.'pages/'.$page.'/content.json',$post['content']);
+  file_put_contents($app->config->sitedir.'templates/pages/'.$page.'.twig',$post['template']);
+  
+  $app->response->setBody(json_encode(array('status'=>1)));
 })->name('admin_api_page_post');
 
 // Custom routes
