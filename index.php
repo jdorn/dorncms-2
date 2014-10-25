@@ -2,6 +2,7 @@
 session_cache_limiter(false);
 session_start();
 require_once 'vendor/autoload.php'; 
+require_once 'lib/EvaluateExtension.php';
 
 class DornCMSApp extends \Slim\Slim {
   protected $string_view;
@@ -17,6 +18,7 @@ class DornCMSApp extends \Slim\Slim {
     $site_loader = new \Twig_Loader_Filesystem($this->config->sitedir.'templates');
     $this->site_view = new \Twig_Environment($site_loader);
     $this->site_view->addExtension(new \Slim\Views\TwigExtension());
+    $this->site_view->addExtension(new \EvaluateExtension());
     
     $this->meta_schema = json_decode(file_get_contents('config/meta.schema.json'));
   }
@@ -163,7 +165,7 @@ $app->get('/',function() use($app) {
 })->name('home');
 
 $app->get('/:page', function($page) use($app) {
-  $app->rednerSitePage($page);
+  $app->renderSitePage($page);
 })->name('page');
 
 $app->run(); 

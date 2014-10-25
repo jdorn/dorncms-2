@@ -12,6 +12,17 @@
 </nav>
 {% endblock %}
 
+{% block head %}
+<style>
+#content_form h3 .json-editor-btn-delete {
+  display: none;
+}
+#content_form .well > .btn-group .json-editor-btn-delete {
+  display: none;
+}
+</style>
+{% endblock %}
+
 {% block content %}
   <div class='row'>
     <div class='col-md-12'>
@@ -19,11 +30,13 @@
     </div>
   </div>
   <div class='row'>
-    <div class='col-md-6'>
-      <div id='content_form'></div>
-    </div>
-    <div class='col-md-6'>
+    <div class='col-md-12'>
       <div id='meta_form'></div>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col-md-12'>
+      <div id='content_form'></div>
     </div>
   </div>
   <div class='row'>
@@ -39,6 +52,11 @@
 <script src='{{ baseUrl() }}/admin_static/js/ace/mode-twig.js'></script>
 <script>
 JSONEditor.defaults.theme = 'bootstrap3';
+JSONEditor.defaults.iconlib = 'fontawesome4';
+JSONEditor.defaults.options.disable_collapse = true;
+JSONEditor.defaults.options.disable_edit_json = true;
+JSONEditor.defaults.options.disable_properties = true;
+
 $.getJSON('{{ urlFor("admin_api_page",{"page": page}) }}',function(data) {
   var meta = new JSONEditor(document.getElementById('meta_form'),{
     schema: data.metaschema,
